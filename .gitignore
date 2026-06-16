@@ -1,0 +1,6 @@
+.DS_Store
+.ruff_cache/
+__pycache__/
+tests/test-profile/
+tests/manual-test-profile/
+*.pyc

@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Google Maps One-Click Share",
+  "version": "1.0",
+  "description": "Replaces the Google Maps share button: copies place name, location and short link to clipboard. Icon by Kerismaker (flaticon.com/authors/kerismaker).",
+  "permissions": ["clipboardWrite", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.google.com/maps/*",
+        "https://*.google.com/maps/*"
+      ],
+      "js": ["interceptor.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://www.google.com/maps/*",
+        "https://*.google.com/maps/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

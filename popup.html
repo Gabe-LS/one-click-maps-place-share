@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 260px;
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+  color: #202124;
+  background: #fff;
+}
+.header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.header h1 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+}
+.header p {
+  font-size: 11px;
+  color: #5f6368;
+  margin-top: 2px;
+}
+.setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+}
+.setting-label {
+  font-size: 13px;
+  color: #3c4043;
+}
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle .track {
+  position: absolute;
+  inset: 0;
+  background: #dadce0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle .track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+.toggle input:checked + .track {
+  background: #1a73e8;
+}
+.toggle input:checked + .track::after {
+  transform: translateX(16px);
+}
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>Google Maps One-Click Share</h1>
+    <p>v1.0</p>
+  </div>
+  <div class="setting">
+    <span class="setting-label">Debug logging</span>
+    <label class="toggle">
+      <input type="checkbox" id="debug">
+      <span class="track"></span>
+    </label>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
