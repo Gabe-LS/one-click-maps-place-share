@@ -59,10 +59,40 @@
   // ── Place info from page ───────────────────────────────────
 
   function getPlaceName() {
+    var addrBtn = document.querySelector('button[data-item-id*="address"]');
+    if (addrBtn) {
+      var panel = addrBtn.closest('[role="main"]');
+      if (panel) {
+        var h1 = panel.querySelector("h1");
+        var text = h1 ? h1.textContent.trim().replace(PUA_RE, "") : "";
+        if (text) return text;
+        var ariaLabel = (panel.getAttribute("aria-label") || "").trim();
+        if (ariaLabel) return ariaLabel;
+      }
+    }
+
     var h1 = document.querySelector("h1");
-    var name = h1 ? h1.textContent.trim() : null;
-    if (!name) warn("place name not found (no h1)");
-    return name;
+    var h1Text = h1 ? h1.textContent.trim().replace(PUA_RE, "") : "";
+    if (h1Text) return h1Text;
+
+    var title = document.title || "";
+    var cleaned = title.replace(/\s*[-–—·]\s*Google\s+Maps.*$/i, "").trim();
+    if (cleaned && cleaned !== title.trim()) {
+      warn("place name from page title fallback");
+      return cleaned;
+    }
+
+    var pathMatch = window.location.pathname.match(/\/maps\/place\/([^\/@]+)/);
+    if (pathMatch) {
+      var decoded = decodeURIComponent(pathMatch[1].replace(/\+/g, " ")).trim();
+      if (decoded) {
+        warn("place name from URL path fallback");
+        return decoded;
+      }
+    }
+
+    warn("place name not found by any strategy");
+    return null;
   }
 
   function getPlaceLocation() {
