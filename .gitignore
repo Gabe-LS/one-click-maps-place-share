@@ -1,18 +1,15 @@
+node_modules/
+.chrome-profile/
+screenshots/
+test-results/
 .DS_Store
 .ruff_cache/
-__pycache__/
-*.pyc
-
-# Test browser profiles
-test-profile/
-manual-test-profile/
-tests/test-profile/
-tests/manual-test-profile/
-
-# Source design files
-*.psd
 store/
 tests/
+test-profile*/
+CLAUDE.md
 PRIVACY.md
 STORE_LISTING.md
 icon.svg
+extension.zip
+test-*.png
