@@ -97,7 +97,7 @@
     for (var j = 0; j < h1s.length; j++) {
       if (!h1s[j].closest('[role="dialog"]')) {
         var raw = h1s[j].textContent.trim();
-        var timeRange = raw.match(/^\d{1,2}[.:]\d{2}\s*[-–]\s*\d{1,2}[.:]\d{2}\s*\((.+)\)$/);
+        var timeRange = raw.match(/^\d{1,2}[.:]\d{2}.*[-–].*\d{1,2}[.:]\d{2}.*\((.+)\)\s*$/);
         duration = timeRange ? timeRange[1].trim() : raw.split("(")[0].trim();
         break;
       }
