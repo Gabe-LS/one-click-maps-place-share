@@ -10,6 +10,13 @@ Pengkalan Chepa, 16100 Kota Bharu, Kelantan, Malaysia
 https://maps.app.goo.gl/1XdC7ozQWLMGD6Zn8
 ```
 
+Works on directions too — click share on any route:
+
+```
+Milano Centrale → Lorena Suites & Apartments · By public transport
+https://maps.app.goo.gl/xvA2V7HPJTWyuouQ8
+```
+
 Works regardless of what language Google Maps is set to.
 
 ## Install
@@ -21,9 +28,8 @@ Works regardless of what language Google Maps is set to.
 ## How it works
 
 1. An XHR/fetch interceptor (MAIN world, `document_start`) captures the short link from Google Maps' own `CreateShortUrl` RPC response
-2. A content script places an invisible overlay on the share button
-3. On click: the share dialog opens hidden (CSS `:has()` selectors), the short link is captured, the dialog is closed, and the place name + location + link are copied to clipboard
-4. Second click on the same place reuses the cached link instantly
+2. A capturing click listener detects the share button (place or directions) and hides the dialog before it renders
+3. The short link is captured from the RPC response, place info or route info is extracted, the dialog is closed, and everything is copied to clipboard
 
 ## Debug logging
 
@@ -34,7 +40,7 @@ Click the extension icon in the toolbar and toggle "Debug logging". All logs use
 | File | Purpose |
 |---|---|
 | `interceptor.js` | MAIN world: dialog-hiding CSS + XHR/fetch short link interceptor |
-| `content.js` | ISOLATED world: overlay, share flow, clipboard, toast |
+| `content.js` | ISOLATED world: share button detection, place/directions info, clipboard, toast |
 | `popup.html/js` | Settings popup (debug toggle) |
 | `tests/` | Playwright test scripts + DevTools console debug helpers |
 

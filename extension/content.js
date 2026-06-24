@@ -44,11 +44,9 @@
   function isShareButton(el) {
     if (!el || el.tagName !== "BUTTON") return false;
     var jslog = el.getAttribute("jslog") || "";
-    if (jslog.indexOf("13534") === 0) return true;
-    if (el.hasAttribute("data-value")) {
-      var icon = el.querySelector("span");
-      if (icon && icon.textContent.trim() === SHARE_ICON) return true;
-    }
+    if (jslog.indexOf("13534") === 0 || jslog.indexOf("14906") === 0) return true;
+    var icon = el.querySelector("span");
+    if (icon && icon.textContent.trim() === SHARE_ICON) return true;
     return false;
   }
 
@@ -76,6 +74,36 @@
 
   // ── Place info from page ───────────────────────────────────
 
+  function isDirectionsPage() {
+    return window.location.pathname.indexOf("/maps/dir/") !== -1;
+  }
+
+  var TRAVEL_MODES = { "0": "By car", "1": "By bike", "2": "On foot", "3": "By public transport" };
+
+  function getDirectionsInfo() {
+    var match = window.location.pathname.match(/\/maps\/dir\/(.+)/);
+    if (!match) return { name: null, location: null };
+    var parts = match[1].split("/");
+    var waypoints = [];
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i].charAt(0) === "@" || parts[i].indexOf("data=") !== -1 || parts[i].indexOf("am=") !== -1) break;
+      var decoded = decodeURIComponent(parts[i].replace(/\+/g, " "));
+      var name = decoded.split(",")[0].trim();
+      if (name) waypoints.push(name);
+    }
+    var dirName = waypoints.length >= 2 ? waypoints.join(" → ") : null;
+    var mode = null;
+    var selected = document.querySelector('[data-travel_mode].vSX6le');
+    if (selected) mode = selected.getAttribute("data-travel_mode");
+    if (!mode) {
+      var modeMatches = window.location.href.match(/!3e(\d)/g);
+      if (modeMatches) mode = modeMatches[modeMatches.length - 1].charAt(3);
+    }
+    var modeLabel = mode ? TRAVEL_MODES[mode] || "" : "";
+    if (modeLabel && dirName) dirName = dirName + " · " + modeLabel;
+    return { name: dirName, location: null };
+  }
+
   function getPlaceName() {
     var addrBtn = document.querySelector('button[data-item-id*="address"]');
     if (addrBtn) {
@@ -89,9 +117,13 @@
       }
     }
 
-    var h1 = document.querySelector("h1");
-    var h1Text = h1 ? h1.textContent.trim().replace(PUA_RE, "") : "";
-    if (h1Text) return h1Text;
+    var h1s = document.querySelectorAll("h1");
+    for (var i = 0; i < h1s.length; i++) {
+      if (!h1s[i].closest('[role="dialog"]')) {
+        var h1Text = h1s[i].textContent.trim().replace(PUA_RE, "");
+        if (h1Text) return h1Text;
+      }
+    }
 
     var title = document.title || "";
     var cleaned = title.replace(/\s*[-–—·]\s*Google\s+Maps.*$/i, "").trim();
@@ -122,6 +154,10 @@
 
   function collectPlaceInfo(timeoutMs) {
     return new Promise(function (resolve) {
+      if (isDirectionsPage()) {
+        resolve(getDirectionsInfo());
+        return;
+      }
       var name = getPlaceName();
       var loc = getPlaceLocation();
       if (loc) {
