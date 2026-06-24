@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "One-Click Maps Place Share",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Replaces the Google Maps share button: copies place name, location and short link to clipboard.",
   "permissions": ["clipboardWrite", "storage"],
   "action": {
